@@ -29,7 +29,7 @@ public class ExchangeRate {
         return id;
     }
 
-    public Currency getCurrency(Currency currency) {
+    public Currency getCurrency() {
         return currency;
     }
 
