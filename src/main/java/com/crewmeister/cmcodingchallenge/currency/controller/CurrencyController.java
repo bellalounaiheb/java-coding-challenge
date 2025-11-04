@@ -1,0 +1,27 @@
+package com.crewmeister.cmcodingchallenge.currency.controller;
+
+import com.crewmeister.cmcodingchallenge.currency.dto.CurrencyDTO;
+import com.crewmeister.cmcodingchallenge.currency.repository.CurrencyRepository;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@RestController()
+@RequestMapping("/api/currencies")
+public class CurrencyController {
+    private final CurrencyRepository currencyRepository;
+
+    public CurrencyController(CurrencyRepository currencyRepository) {
+        this.currencyRepository = currencyRepository;
+    }
+
+    @GetMapping
+    public List<CurrencyDTO> getAllCurrencies() {
+        return currencyRepository.findAll().stream()
+                .map(c -> new CurrencyDTO(c.getCode(), c.getCode()))
+                .collect(Collectors.toList());
+    }
+}

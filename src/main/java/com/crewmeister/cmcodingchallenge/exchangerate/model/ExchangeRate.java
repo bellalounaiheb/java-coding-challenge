@@ -1,4 +1,4 @@
-package com.crewmeister.cmcodingchallenge.exchangerate;
+package com.crewmeister.cmcodingchallenge.exchangerate.model;
 
 import com.crewmeister.cmcodingchallenge.currency.model.Currency;
 
@@ -12,18 +12,15 @@ public class ExchangeRate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @ManyToOne
     public Currency currency;
-
     private LocalDate rateDate;
-
     private BigDecimal rateValue;
 
     public ExchangeRate() {}
 
-    public ExchangeRate(Long id, LocalDate rateDate, BigDecimal rateValue) {
-        this.id = id;
+    public ExchangeRate(Currency currency, LocalDate rateDate, BigDecimal rateValue) {
+        this.currency = currency;
         this.rateDate = rateDate;
         this.rateValue = rateValue;
     }
