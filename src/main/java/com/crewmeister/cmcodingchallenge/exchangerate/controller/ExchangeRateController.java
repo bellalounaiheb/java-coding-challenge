@@ -23,6 +23,7 @@ public class ExchangeRateController {
         this.importer = importer;
     }
 
+    /** User story 2: Get all EUR-FX exchange rates at all dates */
     @GetMapping("all-exchange-rates")
     public Page<ExchangeRateDTO> getAllExchangeRates(
             @RequestParam(defaultValue = "0") int page,

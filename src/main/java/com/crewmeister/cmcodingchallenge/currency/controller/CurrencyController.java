@@ -18,6 +18,10 @@ public class CurrencyController {
         this.currencyRepository = currencyRepository;
     }
 
+    /**
+     * Returns all available (non-obsolete) currencies from the database.
+     * User story 1 : Get a list of all available currencies
+     */
     @GetMapping
     public List<CurrencyDTO> getAllCurrencies() {
         return currencyRepository.findAll().stream()
