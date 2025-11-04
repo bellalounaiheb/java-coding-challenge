@@ -7,10 +7,12 @@ import com.crewmeister.cmcodingchallenge.exchangerate.service.ExchangeRateImport
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/rates")
@@ -23,7 +25,7 @@ public class ExchangeRateController {
         this.importer = importer;
     }
 
-    /** User story 2: Get all EUR-FX exchange rates at all dates */
+    /** User story 2: Get all EUR-FX exchange rates at all dates as a collection */
     @GetMapping("all-exchange-rates")
     public Page<ExchangeRateDTO> getAllExchangeRates(
             @RequestParam(defaultValue = "0") int page,
@@ -38,6 +40,34 @@ public class ExchangeRateController {
                 rate.getRateDate().toString(),
                 rate.getRateValue()
         ));
+    }
+
+    @PostMapping("/update")
+    public String updateRates() {
+        importer.updateFromBundesbankApi();
+        return "Bundesbank update triggered.";
+    }
+
+    /** User story 3 - Rates at a particular day */
+    @GetMapping(params = "date")
+    public Object getExchangeRatesByDate(@RequestParam String date) {
+        LocalDate targetDate = LocalDate.parse(date);
+        List<ExchangeRate> rates = exchangeRateRepository.findAllByRateDate(targetDate);
+
+        if (rates.isEmpty()) {
+            return Map.of(
+                    "message", "No exchange rate records found for date " + targetDate
+            );
+        }
+
+        return rates.stream()
+                .map(rate -> new ExchangeRateDTO(
+                        "EUR",
+                        rate.getCurrency().getCode(),
+                        rate.getRateDate().toString(),
+                        rate.getRateValue()
+                ))
+                .collect(Collectors.toList());
     }
 
 
