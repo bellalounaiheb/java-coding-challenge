@@ -1,6 +1,8 @@
 package com.crewmeister.cmcodingchallenge.exchangerate.controller;
 
 import com.crewmeister.cmcodingchallenge.exchangerate.dto.ExchangeRateDTO;
+import com.crewmeister.cmcodingchallenge.exchangerate.dto.ExchangeRatesForDateDTO;
+import com.crewmeister.cmcodingchallenge.exchangerate.dto.SimpleRateDTO;
 import com.crewmeister.cmcodingchallenge.exchangerate.model.ExchangeRate;
 import com.crewmeister.cmcodingchallenge.exchangerate.repository.ExchangeRateRepository;
 import com.crewmeister.cmcodingchallenge.exchangerate.service.ExchangeRateImporter;
@@ -64,14 +66,14 @@ public class ExchangeRateController {
             );
         }
 
-        return rates.stream()
-                .map(rate -> new ExchangeRateDTO(
-                        "EUR",
+        List<SimpleRateDTO> rateList = rates.stream()
+                .map(rate -> new SimpleRateDTO(
                         rate.getCurrency().getCode(),
-                        rate.getRateDate().toString(),
                         rate.getRateValue()
                 ))
                 .collect(Collectors.toList());
+
+        return new ExchangeRatesForDateDTO(targetDate.toString(), "EUR", rateList);
     }
 
     /** User story 4 - Convert an amount of currency to euro on a particular day */
