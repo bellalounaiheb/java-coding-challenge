@@ -6,6 +6,8 @@ import com.crewmeister.cmcodingchallenge.exchangerate.dto.SimpleRateDTO;
 import com.crewmeister.cmcodingchallenge.exchangerate.model.ExchangeRate;
 import com.crewmeister.cmcodingchallenge.exchangerate.repository.ExchangeRateRepository;
 import com.crewmeister.cmcodingchallenge.exchangerate.service.ExchangeRateImporter;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +33,10 @@ public class ExchangeRateController {
     }
 
     /** User story 2: Get all EUR-FX exchange rates at all dates as a collection */
+    @Operation(
+            summary = "Get all EUR-FX exchange rates at all available dates",
+            description = "Returns a paginated list of all EUR-FX exchange rates for all available dates"
+    )
     @GetMapping("all-exchange-rates")
     public Page<ExchangeRateDTO> getAllExchangeRates(
             @RequestParam(defaultValue = "0") int page,
@@ -48,6 +54,13 @@ public class ExchangeRateController {
     }
 
     /** Manual test to fetch new data*/
+    @Operation(
+            summary = "Trigger live exchange rate update from Bundesbank",
+            description = "Initiates a manual update of all EUR-FX exchange rates by fetching the latest data "
+            + "from the Deutsche Bundesbank API. This process retrieves the most recent foreign exchange "
+            + "reference rates for all supported currencies and stores them in the local database and csv files. "
+            + "It is also automatically scheduled to run daily."
+    )
     @PostMapping("/update")
     public String updateRates() {
         importer.updateFromBundesbankApi();
@@ -55,6 +68,15 @@ public class ExchangeRateController {
     }
 
     /** User story 3 - Rates at a particular day */
+    @Operation(
+            summary = "Get EUR-FX exchange rates for a specific date",
+            description = "Retrieves all available EUR-FX exchange rates for the specified date."
+    )
+    @Parameter(
+            name = "date",
+            description = "Taget date (ISO format: YYYY-MM-DD) for which exchange rates should be retrieved.",
+            example = "2025-11-04"
+    )
     @GetMapping(params = "date")
     public Object getExchangeRatesByDate(@RequestParam String date) {
         LocalDate targetDate = LocalDate.parse(date);
@@ -77,7 +99,11 @@ public class ExchangeRateController {
     }
 
     /** User story 4 - Convert an amount of currency to euro on a particular day */
-    @GetMapping("/Convert")
+    @Operation(
+            summary = "Convert a given currency amount to EUR for a specific date",
+            description = "Converts the specified amount of the given foreign currency to EUR at the given date"
+    )
+    @GetMapping("/convert")
     public Object convertToEuro(
             @RequestParam String currency,
             @RequestParam String date,

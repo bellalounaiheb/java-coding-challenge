@@ -3,6 +3,7 @@ package com.crewmeister.cmcodingchallenge.currency.controller;
 import com.crewmeister.cmcodingchallenge.currency.dto.CurrencyDTO;
 import com.crewmeister.cmcodingchallenge.currency.dto.CurrencyListDTO;
 import com.crewmeister.cmcodingchallenge.currency.repository.CurrencyRepository;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,9 +21,13 @@ public class CurrencyController {
     }
 
     /**
-     * Returns all available (non-obsolete) currencies from the database.
+     * Returns all available (non-obsolete) currencies.
      * User story 1 : Get a list of all available currencies
      */
+    @Operation(
+            summary = "Get all available currencies",
+            description = "Retrieves a list of all available (non-obsolete) currencies"
+    )
     @GetMapping
     public CurrencyListDTO getAllCurrencies() {
         List<CurrencyDTO> list = currencyRepository.findAll().stream()
