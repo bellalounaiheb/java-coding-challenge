@@ -7,13 +7,18 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "exchange_rates")
+@Table(name = "exchange_rates",
+    uniqueConstraints = {
+            @UniqueConstraint(columnNames={"currency_id", "rate_date"})
+    })
 public class ExchangeRate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
+    @JoinColumn(name = "currency_id", nullable = false)
     public Currency currency;
+    @Column(name = "rate_date", nullable = false)
     private LocalDate rateDate;
     private BigDecimal rateValue;
 

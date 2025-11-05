@@ -25,7 +25,7 @@ public class CurrencyController {
     @GetMapping
     public List<CurrencyDTO> getAllCurrencies() {
         return currencyRepository.findAll().stream()
-                .map(c -> new CurrencyDTO(c.getCode(), c.getCode()))
+                .map(c -> new CurrencyDTO(c.getCode(), c.getName()))
                 .collect(Collectors.toList());
     }
 }
