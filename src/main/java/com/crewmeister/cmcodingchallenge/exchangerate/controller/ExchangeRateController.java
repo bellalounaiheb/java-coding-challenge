@@ -9,9 +9,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -69,6 +72,37 @@ public class ExchangeRateController {
                         rate.getRateValue()
                 ))
                 .collect(Collectors.toList());
+    }
+
+    /** User story 4 - Convert an amount of currency to euro on a particular day */
+    @GetMapping("/Convert")
+    public Object convertToEuro(
+            @RequestParam String currency,
+            @RequestParam String date,
+            @RequestParam BigDecimal amount
+    ) {
+        LocalDate targetDate = LocalDate.parse(date);
+        Optional<ExchangeRate> rateOpt = exchangeRateRepository.findByCurrency_CodeAndRateDate(currency.toUpperCase(), targetDate);
+
+        if (rateOpt.isEmpty()) {
+            return Map.of(
+                    "message", "No exchange rate found for " + currency.toUpperCase() + " on " + targetDate
+            );
+        }
+
+        ExchangeRate rate = rateOpt.get();
+
+        BigDecimal eurAmount = amount.divide(rate.getRateValue(), 4, RoundingMode.HALF_UP);
+
+        String message = String.format(
+                "On %s, %.2f %s = %.2f EUR",
+                targetDate,
+                amount,
+                currency.toUpperCase(),
+                eurAmount
+        );
+
+        return Map.of("message", message);
     }
 
 
