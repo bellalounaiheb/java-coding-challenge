@@ -1,5 +1,9 @@
 # Crewmeister Test Assignment - Java Backend Developer
-
+| Field | Details |
+|--------|----------|
+| **Solution by** | Iheb Bellalouna |
+| **Status** |  Completed |
+| **Documentation** | See [README_DEV.md](./README_DEV.md) for implementation details, project architecture, API usage examples, and testing instructions. |
 ## Intro
 Thank you for taking the time to complete this challenge as part of your application at Crewmeister!
 We are taking development skills very serious and invest a lot of time to find the right candidate. 
