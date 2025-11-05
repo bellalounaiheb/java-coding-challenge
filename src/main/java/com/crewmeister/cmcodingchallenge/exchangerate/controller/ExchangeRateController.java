@@ -42,6 +42,7 @@ public class ExchangeRateController {
         ));
     }
 
+    /** Manual test to fetch new data*/
     @PostMapping("/update")
     public String updateRates() {
         importer.updateFromBundesbankApi();

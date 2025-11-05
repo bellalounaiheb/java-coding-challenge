@@ -306,7 +306,7 @@ public class ExchangeRateImporter {
                 currencyCode
         );
 
-        System.out.println("➡ Fetching " + currencyCode + " from Bundesbank...");
+        System.out.println("### Fetching " + currencyCode + " from Bundesbank...");
 
         HttpURLConnection conn = (HttpURLConnection) new URL(apiUrl).openConnection();
         conn.setRequestProperty("Accept", "application/vnd.sdmx.data+json");
