@@ -8,6 +8,8 @@ import com.crewmeister.cmcodingchallenge.exchangerate.repository.ExchangeRateRep
 import com.crewmeister.cmcodingchallenge.exchangerate.service.ExchangeRateImporter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -62,6 +64,7 @@ public class ExchangeRateController {
             + "It is also automatically scheduled to run daily."
     )
     @PostMapping("/update")
+    @CacheEvict(value = { "ratesByDate", "currencies" }, allEntries = true)
     public String updateRates() {
         importer.updateFromBundesbankApi();
         return "Bundesbank update triggered.";
@@ -78,7 +81,9 @@ public class ExchangeRateController {
             example = "2025-11-04"
     )
     @GetMapping(params = "date")
+    @Cacheable(value = "ratesByDate", key = "#date")
     public Object getExchangeRatesByDate(@RequestParam String date) {
+        System.out.println("Fetching exchange rates from database"); // to test caching
         LocalDate targetDate = LocalDate.parse(date);
         List<ExchangeRate> rates = exchangeRateRepository.findAllByRateDate(targetDate);
 

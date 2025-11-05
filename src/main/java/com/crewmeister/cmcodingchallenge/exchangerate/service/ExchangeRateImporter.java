@@ -6,6 +6,7 @@ import com.crewmeister.cmcodingchallenge.exchangerate.repository.ExchangeRateRep
 import com.crewmeister.cmcodingchallenge.exchangerate.model.ExchangeRate;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -264,6 +265,7 @@ public class ExchangeRateImporter {
      * Runs automatically at 11:00 AM local time.
      */
     @Scheduled(cron = "0 0 11 * * *")
+    @CacheEvict(value = { "ratesByDate", "currencies" }, allEntries = true)
     public void updateFromBundesbankApi() {
         System.out.println("### Starting Bundesbank API update for all currencies...");
 
