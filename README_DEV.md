@@ -43,7 +43,8 @@ This process initializes the in-memory H2 database with currency and rate data b
 
 <details>
   <summary>Click to expand console output</summary>
-  ```text
+  
+```text
 ### Starting FX data import from CSV files...
 ### Importing: BBEX3.D.AUD.EUR.BB.AC.000.csv
 ### AUD -> 6873 inserted, 0 skipped
