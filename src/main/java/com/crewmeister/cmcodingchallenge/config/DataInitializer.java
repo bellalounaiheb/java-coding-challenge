@@ -14,8 +14,8 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        System.out.println("Starting FX data import...");
+        // System.out.println("Starting FX data import...");
         exchangeRateImporter.importCsvData();
-        System.out.println("Import complete.");
+        // System.out.println("Import complete.");
     }
 }

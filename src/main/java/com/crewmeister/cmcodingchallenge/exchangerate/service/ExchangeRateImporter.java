@@ -135,10 +135,10 @@ public class ExchangeRateImporter {
                                 .replaceAll(",+$", "")
                                 .trim();
 
-                        System.out.println("### HEADER DEBUG: " + metadata);
+                        // System.out.println("### HEADER DEBUG: " + metadata);
                         currencyCode = extractCode(metadata);
                         currencyName = extractName(metadata);
-                        System.out.printf("### Parsed code=%s, name=%s%n", currencyCode, currencyName);
+                        // System.out.printf("### Parsed code=%s, name=%s%n", currencyCode, currencyName);
                         continue;
                     }
 
@@ -163,7 +163,7 @@ public class ExchangeRateImporter {
                         try {
                             date = LocalDate.parse(rawDate, DateTimeFormatter.ofPattern("M/d/yyyy"));
                         } catch (Exception e2) {
-                            System.out.printf("### Skipped invalid date '%s' in %s%n", rawDate, file.getFilename());
+                            // System.out.printf("### Skipped invalid date '%s' in %s%n", rawDate, file.getFilename());
                             continue;
                         }
                     }
@@ -172,14 +172,14 @@ public class ExchangeRateImporter {
                     try {
                         value = new BigDecimal(parts[1].trim());
                     } catch (NumberFormatException e) {
-                        System.out.printf("### Skipped invalid rate '%s' on %s%n", parts[1], rawDate);
+                        // System.out.printf("### Skipped invalid rate '%s' on %s%n", parts[1], rawDate);
                         continue;
                     }
 
                     // Retrieve or create currency
                     Currency currency = getOrCreateCurrency(currencyCode, currencyName, lastUpdated);
                     if (currency == null) {
-                        System.out.println("### Skipped " + file.getFilename() + " (invalid code: " + currencyCode + ")");
+                        // System.out.println("### Skipped " + file.getFilename() + " (invalid code: " + currencyCode + ")");
                         return;
                     }
 

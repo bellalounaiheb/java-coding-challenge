@@ -1,6 +1,59 @@
 # Crewmeister Java Coding Challenge
 
 ---
+## How to Run the Application
+
+1. ***Prerequisites***
+    - Java **11**
+    - Maven **3.x.x**
+
+
+2. ***Clone the repository***
+   ```bash
+   https://github.com/bellalounaiheb/java-coding-challenge.git
+   cd java-coding-challenge
+
+
+3. ***Build and run the application locally***
+
+```bash
+mvn clean spring-boot:run
+````
+
+
+4. ***Access the Application***
+
+- **Swagger UI:** [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
+- **H2 Console:** [http://localhost:8080/h2-console](http://localhost:8080/h2-console)
+
+
+### H2 Connection Details
+- **JDBC URL:** `jdbc:h2:mem:fxdb`
+- **Username:** `sa`
+- **Password:** *(leave empty)*
+
+---
+
+### Note
+
+On startup, the `DataInitializer` automatically triggers the `ExchangeRateImporter` to load and parse all available currencies and exchange rates from CSV files under: `src/main/resources/data/`
+
+This process initializes the in-memory H2 database with currency and rate data before any API calls are made.
+
+
+###  Example Console Output on Startup
+
+<details>
+  <summary>Click to expand console output</summary>
+
+  ```text
+### Starting FX data import from CSV files...
+### Importing: BBEX3.D.AUD.EUR.BB.AC.000.csv
+### AUD -> 6873 inserted, 0 skipped
+### Import complete! 1 file(s) processed successfully.
+```
+
+---
 
 ## Project Overview
 
