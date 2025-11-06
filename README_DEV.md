@@ -32,8 +32,6 @@ mvn clean spring-boot:run
 - **Username:** `sa`
 - **Password:** *(leave empty)*
 
----
-
 ### Note
 
 On startup, the `DataInitializer` automatically triggers the `ExchangeRateImporter` to load and parse all available currencies and exchange rates from CSV files under: `src/main/resources/data/`
