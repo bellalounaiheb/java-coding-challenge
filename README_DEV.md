@@ -1,45 +1,51 @@
 # Crewmeister Java Coding Challenge
+![Java](https://img.shields.io/badge/Java-11-blue?logo=openjdk)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-2.4.1-brightgreen?logo=springboot)
+![Maven](https://img.shields.io/badge/Maven-3.x.x-orange?logo=apachemaven)
+![Build](https://img.shields.io/badge/Build-Success-success)
+![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
 ---
+
 ## How to Run the Application
 
-1. ***Prerequisites***
-    - Java **11**
-    - Maven **3.x.x**
+**Prerequisites**
+   - Java **11**
+   - Maven **3.x.x**
+---
 
+1. **Clone the repository**
 
-2. ***Clone the repository***
    ```bash
    https://github.com/bellalounaiheb/java-coding-challenge.git
    cd java-coding-challenge
+   ```
+   
+2. **Build and run the application locally**
 
+   ```bash
+   mvn clean spring-boot:run
+   ```
 
-3. ***Build and run the application locally***
+3. **Access the Application**
 
-```bash
-mvn clean spring-boot:run
-````
-
-
-4. ***Access the Application***
-
-- **Swagger UI:** [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
-- **H2 Console:** [http://localhost:8080/h2-console](http://localhost:8080/h2-console)
+   - ***Swagger UI:*** [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
+   - ***H2 Console:*** [http://localhost:8080/h2-console](http://localhost:8080/h2-console)
 
 
 ### H2 Connection Details
-- **JDBC URL:** `jdbc:h2:mem:fxdb`
-- **Username:** `sa`
-- **Password:** *(leave empty)*
+- ***JDBC URL:*** `jdbc:h2:mem:fxdb`
+- ***Username:*** `sa`
+- ***Password:*** *(leave empty)*
 
 ### Note
 
-On startup, the `DataInitializer` automatically triggers the `ExchangeRateImporter` to load and parse all available currencies and exchange rates from CSV files under: `src/main/resources/data/`
+    On startup, the `DataInitializer` automatically triggers the `ExchangeRateImporter` to load and parse all available currencies and exchange rates from CSV files under: `src/main/resources/data/`
+    
+    This process initializes the in-memory H2 database with currency and rate data before any API calls are made.
 
-This process initializes the in-memory H2 database with currency and rate data before any API calls are made.
 
-
-###  Example Console Output on Startup
+### Example Console Output on Startup
 
 <details>
   <summary>Click to expand console output</summary>
@@ -50,8 +56,7 @@ This process initializes the in-memory H2 database with currency and rate data b
 ### AUD -> 6873 inserted, 0 skipped
 ### Import complete! 1 file(s) processed successfully.
 ```
-</details> 
-
+</details>
 
 ---
 
@@ -69,6 +74,7 @@ The project allows users to:
 All data is imported from and appended to CSV files, and continuously enriched with live updates from the Bundesbank API.
 
 ---
+
 ## Architecture Overview
 
 **Tech Stack:**
@@ -139,11 +145,13 @@ The Swagger page lists all available endpoints with descriptions, parameters, an
 ## Example API Usage
 
 ### Convert Currency to EUR
+
 ```bash
 GET http://localhost:8080/api/rates/convert?currency=USD&date=2025-10-10&amount=122.65
 ```
 
 **Response:**
+
 ```json
 {
   "message": "On 2025-10-10, 122.65 USD = 105.73 EUR"
@@ -151,11 +159,13 @@ GET http://localhost:8080/api/rates/convert?currency=USD&date=2025-10-10&amount=
 ```
 
 ### Get Rates for a Date
+
 ```bash
 GET http://localhost:8080/api/rates?date=2021-01-04
 ```
 
 **Response:**
+
 ```json
 {
   "date": "2021-01-04",
@@ -167,9 +177,13 @@ GET http://localhost:8080/api/rates?date=2021-01-04
 }
 ```
 
+---
+
 ## Data Flow Summary
 
 On startup, **`DataInitializer`** calls **`ExchangeRateImporter`** to load FX data from `resources/data/`.
+
+---
 
 ## Caching Behavior
 
@@ -180,20 +194,30 @@ On startup, **`DataInitializer`** calls **`ExchangeRateImporter`** to load FX da
 - Reduces repeated database queries and improves API response time.
 - Cache entries are automatically refreshed when new Bundesbank updates occur.
 
+---
+
 ### Importer Behavior
 - Parses CSV files and persists currencies and rates into the **H2 database**.
 - Avoids duplicates *(idempotent import)*.
 - Update rates live from the **Bundesbank REST API**.
 
+---
+
 ### API Layer
 - Controllers return simplified DTOs such as:
     - `CurrencyListDTO`
     - `ExchangeRateDTO`  
-      for **clean JSON responses**.
+      for clean JSON responses.
 - Frequently requested data (e.g., exchange rates and currency lists) is **cached using Spring Cache** to improve performance.
+
+---
 
 ### Automation
 - A **daily scheduled task** (`@Scheduled`) automatically updates exchange rates.
+- The scheduled update runs daily shortly after the **Bundesbank’s publication** (usually around **10:00 CET**).
+- During this process, the latest exchange rates are written **both to the in-memory H2 database and back into the CSV files** in `src/main/resources/data/`, ensuring data consistency between the local store and the imported files.
+
+---
 
 ## Running Tests
 
@@ -204,10 +228,12 @@ mvn test
 ```
 
 ### Expected Output
+
 ```diff
 + Tests run: 8, Failures: 0, Errors: 0, Skipped: 0
 + BUILD SUCCESS
 ```
+
 ## Test Overview
 
 | Test Class | Description |
@@ -216,6 +242,8 @@ mvn test
 | **`ExchangeRateControllerTest`** | Tests listing, date filtering, conversion, and update endpoints. |
 
 All tests use **`MockMvc`** to simulate HTTP requests **without starting a full web server**. Dependencies (**`ExchangeRateRepository`**, **`CurrencyRepository`**, **`ExchangeRateImporter`**) are **mocked using Mockito**.
+
+---
 
 ## Future Improvements
 
@@ -227,7 +255,9 @@ All tests use **`MockMvc`** to simulate HTTP requests **without starting a full 
 
 ---
 
-## 📜 License / Disclaimer
+## License / Disclaimer
 
-This project was developed for **educational and assessment purposes** as part of the **Crewmeister Java Coding Challenge**.  
-**Bundesbank data** is public and used under its **open data terms**.
+> *Developed as part of the Crewmeister Java Coding Challenge (2025).*  
+> **Bundesbank data** is public and used under its **open data terms**.
+
+
